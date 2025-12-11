@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeKey - Steam Game Keys Marketplace</title>
+    <title>KeyStore - Steam Game Keys Marketplace</title>
     <style>
         * {
             margin: 0;
@@ -307,7 +307,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <a href="#" class="logo">PrimeKey</a>
+            <a href="#" class="logo">KeyStore</a>
             <div class="search-bar">
                 <input type="text" class="search-input" id="searchInput" placeholder="Search for game keys...">
                 <button class="search-button" onclick="searchProducts()">Search</button>
@@ -335,7 +335,7 @@
     <main class="container">
         <!-- Hero Banner -->
         <div class="hero">
-            <h1>Welcome to PrimeKey</h1>
+            <h1>Welcome to KeyStore</h1>
             <p>Your trusted marketplace for authentic Steam game keys at competitive prices</p>
         </div>
 
@@ -376,7 +376,7 @@
         </div>
     </footer>
     <div class="footer-bottom">
-        &copy; 2024 PrimeKey - Trusted Steam Key Marketplace
+        &copy; 2024 KeyStore - Trusted Steam Key Marketplace
     </div>
 
     <!-- Firebase SDK -->
@@ -385,21 +385,49 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
         import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBLgVZR5H5OQ6tHjLKt86L-IbpCrTEk1MI",
-            authDomain: "pkey-db.firebaseapp.com",
-            projectId: "pkey-db",
-            storageBucket: "pkey-db.firebasestorage.app",
-            messagingSenderId: "888060521416",
-            appId: "1:888060521416:web:e29526bfae3d6f9cef6efd",
-            measurementId: "G-NEL6YDY6V9"
-        };
+        // Load Firebase configuration from external JSON file
+        let app, analytics, db;
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
+        async function initializeFirebase() {
+            try {
+                // Fetch the API key from the external JSON file
+                const response = await fetch('./ja82hFak8f2nfHHFA78HF777aNfhaUFnkudB.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load config file: ${response.status}`);
+                }
+                
+                const config = await response.json();
+                
+                // Firebase configuration using the loaded API key
+                const firebaseConfig = {
+                    apiKey: config.apiKey,
+                    authDomain: "pkey-db.firebaseapp.com",
+                    projectId: "pkey-db",
+                    storageBucket: "pkey-db.firebasestorage.app",
+                    messagingSenderId: "888060521416",
+                    appId: "1:888060521416:web:e29526bfae3d6f9cef6efd",
+                    measurementId: "G-NEL6YDY6V9"
+                };
+
+                // Initialize Firebase
+                app = initializeApp(firebaseConfig);
+                analytics = getAnalytics(app);
+                db = getFirestore(app);
+                
+                // Load products after Firebase is initialized
+                await loadProducts();
+                
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                const errorDiv = document.getElementById('errorMessage');
+                const loadingDiv = document.getElementById('loadingMessage');
+                
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = `Failed to load configuration: ${error.message}. Please ensure ja82hFak8f2nfHHFA78HF777aNfhaUFnkudB.json exists in the same directory.`;
+            }
+        }
 
         // Store products globally
         let allProducts = [];
@@ -539,8 +567,8 @@
             });
         });
 
-        // Load products on page load
-        loadProducts();
+        // Initialize Firebase and load products on page load
+        initializeFirebase();
     </script>
 </body>
 </html>
