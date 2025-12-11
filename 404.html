@@ -11,5 +11,13 @@
     </h1>
     <h2>Your request was forbidded for the following reason(s):</h2>
     <h3>404 Request Not Found!</h3>
+
+    <h2 id="url"></h2>
+
+    <script>
+      const url = document.querySelector("#url");
+
+      url.textContent = `URL Tried: ${window.location.href}`;
+    </script>
   </body>
 </html>
