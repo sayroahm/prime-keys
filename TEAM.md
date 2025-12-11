@@ -20,7 +20,18 @@ Evan,
 Maxwell
 
 # FINANCIAL AID, FINANCIAL MANAGER
-Lucas
+Lucas,
 Managers
+
+# MARKETING, KEY FINDING
+Declan
+
+# KEY FINDING
+Jaxon,
+Dominic,
+Evan,
+Maxwell,
+Lucas,
+Declan
 
 List may be subject to change.
